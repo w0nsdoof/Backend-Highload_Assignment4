@@ -9,4 +9,5 @@ __pycache__/
 # Local 
 static/
 *.sqlite3
-
+celerybeat-schedule
+*.env
