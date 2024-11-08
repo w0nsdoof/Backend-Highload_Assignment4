@@ -132,6 +132,21 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Throttling
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
+}
+
+# Num proxies != 0 (n) | DRF will skip the (n) IPs in X-Forwarded-For(nginx) and use the last IP to identify the client.
+NUM_PROXIES = 0 # Use only REMOTE_ADDR (WSGI)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
