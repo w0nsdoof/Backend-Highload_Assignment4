@@ -8,6 +8,7 @@ __pycache__/
 
 # Local 
 static/
+uploads/
 *.sqlite3
 celerybeat-schedule
 *.env

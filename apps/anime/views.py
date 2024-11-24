@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 
 from rest_framework import generics, permissions
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Anime
+from .models import Anime, FileUpload
 from .serializers import AnimeSerializer
+from .forms import FileUploadForm
+from .tasks import process_csv_file
 from .utils import parse_csv
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -41,3 +43,23 @@ def upload_csv(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     return render(request, 'upload_csv.html')
+
+def upload_file_view(request):
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            file_upload = form.save()
+            process_csv_file.delay(file_upload.id)
+            return JsonResponse({'file_id': file_upload.id, 'message': 'File uploaded successfully!'}, status=201)
+    else:
+        form = FileUploadForm()
+    return render(request, 'upload_file.html', {'form': form})
+
+
+def upload_status_view(request, file_id):
+    file_upload = get_object_or_404(FileUpload, id=file_id)
+    return JsonResponse({
+        'status': file_upload.status,
+        'progress': file_upload.progress,
+        'error_message': file_upload.error_message
+    })

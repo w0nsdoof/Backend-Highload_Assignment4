@@ -14,4 +14,15 @@ class Anime(models.Model):
     
     def __str__(self):
         return self.name
+
+class FileUpload(models.Model):
+    file = models.FileField(upload_to='uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='pending')  # pending, processing, completed, failed
+    progress = models.PositiveIntegerField(default=0)  # Percentage
+    error_message = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.file.name} ({self.status})"
+    
     
