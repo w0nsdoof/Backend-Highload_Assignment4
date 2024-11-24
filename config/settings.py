@@ -30,6 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CSRF_COOKIE_SECURE = False  
+CSRF_COOKIE_HTTPONLY = False
 
 # Application definition
 
@@ -93,6 +95,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 AUTH_USER_MODEL = 'authentication.User'
+OTP_EXPIRATION_TIME = 300
 
 AUTH_PASSWORD_VALIDATORS = [
     {

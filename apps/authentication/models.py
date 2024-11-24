@@ -1,12 +1,13 @@
-import jwt
+import jwt, random
 
 from datetime import datetime, timedelta
 
-from django.conf import settings
 from django.contrib.auth.models import (
 	AbstractBaseUser, BaseUserManager, PermissionsMixin
 )
+from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
     """
@@ -48,6 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    two_factor_enabled = models.BooleanField(default=True)
 
     # Дополнительный поля, необходимые Django
     # при указании кастомной модели пользователя.
@@ -99,3 +101,23 @@ class User(AbstractBaseUser, PermissionsMixin):
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token
+    
+class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otp_codes')
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    def is_expired(self):
+        """Проверка на просрочку OTP"""
+        return timezone.now() > self.expires_at
+
+    @classmethod
+    def generate_code(cls, user):
+        """Сгенирировать и сохранить OTP для заданного user-a"""
+        code = random.randint(100000, 999999)
+        expires_at = timezone.now() + timezone.timedelta(seconds=settings.OTP_EXPIRATION_TIME)
+        otp = cls.objects.create(user=user, code=str(code), expires_at=expires_at)
+        return otp
+    def __str__(self):
+        return f'OTP for {self.user.username}, Expires at: {self.expires_at}'

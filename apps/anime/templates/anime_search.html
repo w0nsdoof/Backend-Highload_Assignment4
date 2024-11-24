@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>AnimeForm</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Search for Anime in our DB</h1>
+    <form method="POST">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Search</button>
+    </form>
+    <a href="{% url 'post_list' %}">Back to all animes</a>
+  </body>
+</html>

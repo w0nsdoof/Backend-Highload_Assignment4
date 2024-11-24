@@ -1,0 +1,17 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Verify Two-Factor Authentication</title>
+  </head>
+  <body>
+    <h1>Verify Authentication Code</h1>
+    <form method="post">
+      {% csrf_token %}
+      <input type="text" name="code" placeholder="Enter the 6-digit code" />
+      <button type="submit">Verify</button>
+      {% if error %}
+      <p style="color: red">{{ error }}</p>
+      {% endif %}
+    </form>
+  </body>
+</html>

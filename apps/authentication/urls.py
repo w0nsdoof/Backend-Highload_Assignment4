@@ -1,12 +1,12 @@
 from django.urls import path
 
 from .views import (
-    LoginAPIView, RegistrationAPIView, UserRetrieveUpdateAPIView
+    user_login, two_factor_verify, dashboard
 )
 
 app_name = 'authentication'
 urlpatterns = [
-    path('register/', RegistrationAPIView.as_view()),
-    path('login/', LoginAPIView.as_view()),
-    path('profile/', UserRetrieveUpdateAPIView.as_view()),
+    path('login/', user_login, name='login'),
+    path('2fa-verify/', two_factor_verify, name='2fa-verify'),
+    path('dashboard/', dashboard, name='dashboard'),
 ]
