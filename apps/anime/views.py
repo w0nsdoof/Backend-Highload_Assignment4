@@ -16,7 +16,7 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100
 
-@cache_page(60 * 15)  # Cache this view for 15 minutes
+@cache_page(60 * 15)
 class AnimeListCreateView(generics.ListCreateAPIView):
     queryset = Anime.objects.all()
     serializer_class = AnimeSerializer
