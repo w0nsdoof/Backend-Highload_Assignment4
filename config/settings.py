@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     
     'apps.authentication',
     'apps.tasks',
+    'apps.anime',
 ]
 
 MIDDLEWARE = [
