@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import cache_page
 from django.http import JsonResponse
 
 from rest_framework import generics, permissions
@@ -15,12 +16,14 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100
 
+@cache_page(60 * 15)  # Cache this view for 15 minutes
 class AnimeListCreateView(generics.ListCreateAPIView):
     queryset = Anime.objects.all()
     serializer_class = AnimeSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+@cache_page(60 * 5) 
 class AnimeRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Anime.objects.all()
     serializer_class = AnimeSerializer
@@ -43,6 +46,17 @@ def upload_csv(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     return render(request, 'upload_csv.html')
+
+def upload_progress(request, file_id):
+    """
+    Returns the progress percentage of the file processing.
+    """
+    file_upload = get_object_or_404(FileUpload, id=file_id)
+    return JsonResponse({
+        'progress': file_upload.progress,
+        'status': file_upload.status,
+        'error_message': file_upload.error_message
+    })
 
 def upload_file_view(request):
     if request.method == 'POST':
