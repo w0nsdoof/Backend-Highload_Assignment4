@@ -43,7 +43,3 @@ This repository contains a Django backend application designed for managing anim
 ### Conclusion
 
 This project highlights the integration of modern Django tools for creating a high-load backend environment. By leveraging Celery and Redis for asynchronous task management and caching, the application ensures performance and responsiveness even under heavy load. Security is enhanced with custom authentication and 2FA, making it a robust solution for managing anime data efficiently.
-
----
-
-Please provide the links for screenshots to update the placeholders.
