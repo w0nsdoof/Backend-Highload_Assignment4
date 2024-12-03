@@ -1,6 +1,4 @@
-## README.md for **Django High-Load Environment Backend**
-
-### Project Overview
+## Project Overview
 
 This repository contains a Django backend application designed for managing anime data. Users can upload `.csv` files, which are processed asynchronously using Celery. The backend provides CRUD operations on the processed data and features robust authentication mechanisms, including two-factor authentication (2FA) using email OTPs.
 
